@@ -148,6 +148,11 @@ func (c *Conn) ReloadOrTryRestartUnit(name string, mode string) (string, error) 
 	return c.runJob("org.freedesktop.systemd1.Manager.ReloadOrTryRestartUnit", name, mode)
 }
 
+// ResetFailedUnit resets the "failed" state of a particular unit.
+func (c *Conn) ResetFailedUnit(name string) error {
+	return c.sysobj.Call("org.freedesktop.systemd1.Manager.ResetFailedUnit", 0, name).Store()
+}
+
 // StartTransientUnit() may be used to create and start a transient unit, which
 // will be released as soon as it is not running or referenced anymore or the
 // system is rebooted. name is the unit name including suffix, and must be
@@ -341,4 +346,9 @@ type DisableUnitFileChange struct {
 // equivalent to a 'systemctl daemon-reload'.
 func (c *Conn) Reload() error {
 	return c.sysobj.Call("org.freedesktop.systemd1.Manager.Reload", 0).Store()
+}
+
+// ResetFailed resets the "failed" state of all units.
+func (c *Conn) ResetFailed() error {
+	return c.sysobj.Call("org.freedesktop.systemd1.Manager.ResetFailed", 0).Store()
 }
